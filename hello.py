@@ -84,6 +84,17 @@ def pong():
     #keyword =request.args.get('keyword') #get방식  [ping.html - <form action="/pong" method="ㅎㅈㅅ">]
     return render_template('pong.html',keyword=keyword)
 
+@app.route('/naver', methods=['GET','POST'])
+def naver():
+   
+    #keyword =request.form.get('keyword') #post방식 [ping.html - <form action="/pong" method="post">]
+   
+    return render_template('naver.html',keyword=keyword)
+
+@app.route('/google')
+def google():
+   
+    return render_template('google.html',keyword=keyword)
 
 if __name__ =='__main__':
     app.run(debug = True)
