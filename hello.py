@@ -1,5 +1,8 @@
 from flask import Flask, escape, request, render_template
 import random
+import requests
+from bs4 import BeautifulSoup
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -86,15 +89,38 @@ def pong():
 
 @app.route('/naver', methods=['GET','POST'])
 def naver():
-   
-    #keyword =request.form.get('keyword') #post방식 [ping.html - <form action="/pong" method="post">]
-   
+    #print(request.form.get('keyword'))
+    keyword =request.form.get('keyword') #post방식 [ping.html - <form action="/pong" method="post">]
+    #keyword =request.args.get('keyword') #get방식  [ping.html - <form action="/pong" method="ㅎㅈㅅ">]
     return render_template('naver.html',keyword=keyword)
 
 @app.route('/google')
 def google():
-   
-    return render_template('google.html',keyword=keyword)
+    return render_template('google.html')
+
+@app.route('/summoner')
+def summoner():
+    return render_template('summoner.html')
+
+@app.route('/opgg')
+def opgg():
+    username = request.args.get('username')
+    oppg_url = f'http://www.op.gg/summoner/userName={username}'
+    print(oppg_url)
+    res = requests.get(oppg_url).text
+    soup = BeautifulSoup(res,'html.parser')
+
+    rank = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierRank')
+    win = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierInfo > span.WinLose > span.wins')
+    lose = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierInfo > span.WinLose > span.losses')
+    
+    #rank1 = rank.text
+    #win1=win.text
+    #lose1=win.text
+    #print(rank)
+    
+    return render_template('opgg.html', username = username, oppg_url=oppg_url, rank = rank.text, win=win.text, lose=lose.text)
+
 
 if __name__ =='__main__':
     app.run(debug = True)
