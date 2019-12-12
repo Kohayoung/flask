@@ -10,5 +10,11 @@ def hello():
 @app.route('/hi')
 def hi():
     return 'hi'
+
+
+@app.route('/hayoung')
+def hayoung():
+    return 'hayoung~'
+
 if __name__ =='__main__':
     app.run(debug = True)
