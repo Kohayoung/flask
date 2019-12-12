@@ -24,5 +24,13 @@ def html_tag():
 def html_file():
     return render_template('index.html')
 
+@app.route('/variable')
+def variable():
+    name = "고하영이"
+    return render_template('variable.html', html_name = name)
+
+
+
+
 if __name__ =='__main__':
     app.run(debug = True)
